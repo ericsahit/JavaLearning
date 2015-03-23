@@ -5,6 +5,7 @@ import java.util.*;
 import org.googlecode.java.thinking.basic.util.Print;
 import org.junit.Test;
 
+
 public class CollectionTest {
 
 	//@Test
@@ -41,6 +42,7 @@ public class CollectionTest {
 		//LinkedHashSet按照被添加的顺序来保存对象，内部实现使用LinkedHashMap
 		Print.print(fill(new LinkedHashSet<String>()));
 		
+		new Hashtable<String, String>();
 		
 		Print.print(fill(new HashMap<String, String>()));
 		Print.print(fill(new TreeMap<String, String>()));
