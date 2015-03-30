@@ -19,6 +19,17 @@ public class MergeSortTest {
 		}
 	}
 
+	/**
+	 * 堆排序，类似于自底向上的思想，所以称为外排序最常用的排序方式，
+	 * 先对磁盘的Block进行mergeSortSub2内排序，然后再逐个Block进行外排序
+	 * 
+	 * 而快速排序，则是自顶向下的思想，先对整体排序，再对局部排序，不符合磁盘IO的访问模型
+	 * 
+	 * @param arr
+	 * @param first
+	 * @param last
+	 * @param result
+	 */
 	public void mergeSort2(int[] arr, int first, int last, int[] result) {
 		
 		if (first < last) {

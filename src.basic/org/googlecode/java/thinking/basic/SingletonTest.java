@@ -34,15 +34,15 @@ public class SingletonTest {
 			//locking pages of memory into the process's address space
 			//使用系统调用mlock，mlock()页面在地址范围从 addr 和开始,长度的字节.所有页面包含一个指定的地址
 			//范围当调用成功返回驻留在内存中以保证;页面是保证以后留在内存中,直到解锁
-			NativeIO.POSIX.getCacheManipulator().mlock(fileName, mmap, gb);
+			//NativeIO.POSIX.getCacheManipulator().mlock(fileName, mmap, gb);
 			
 			for (int i = 0; i < gb; i++) {
-				buf.put((byte)255);
+				mmap.put((byte)255);
 				System.out.println(i);
 			}
 			
 		    if (mmap != null) {
-		        NativeIO.POSIX.munmap(mmap);
+		        //NativeIO.POSIX.munmap(mmap);
 		        mmap = null;
 		      }
 			
@@ -52,7 +52,7 @@ public class SingletonTest {
 	
 	public static void loadBlock(String blockFileName) throws Exception {
 		
-		MappedByteBuffer mmap;
+		MappedByteBuffer mmap = null;
 		
 	    try {
 	    	
@@ -64,10 +64,10 @@ public class SingletonTest {
 	          throw new IOException("Block InputStream has no FileChannel.");
 	        }
 	        mmap = blockChannel.map(MapMode.READ_ONLY, 0, length);
-	        NativeIO.POSIX.getCacheManipulator().mlock(blockFileName, mmap, length);
+	        //NativeIO.POSIX.getCacheManipulator().mlock(blockFileName, mmap, length);
 	      } finally {
 	          if (mmap != null) {
-		            NativeIO.POSIX.munmap(mmap); // unmapping also unlocks
+		            //NativeIO.POSIX.munmap(mmap); // unmapping also unlocks
 		          }
 	      }
 	}

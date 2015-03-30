@@ -28,6 +28,9 @@ public class Print {
 	public static void info(Object obj) {
 		logger.info("{}", obj);
 	}
+	public static void warn(Object obj) {
+		logger.warn("{}", obj);
+	}
 	
 	public static void info(String format, Object...args) {
 		logger.info(format, args);
