@@ -32,7 +32,34 @@ public class HeapSortTest {
 		}
 	}
 	
+	private void add(int[] arr, int size, int i) {
+		arr[size]=i;
+		
+		int k=size;
+		
+		while (k>=1 && arr[k/2]>arr[k]) {
+			int tmp = arr[k/2];
+			arr[k/2] = arr[k];
+			arr[k]=tmp;
+		}
+	}
+	
+	private int getTop(int[] arr, int size, int i) {
+		
+		int realSize=size-1;
+		if (realSize<=0) return 0;
+		
+		int ret = arr[0];
+		
+		
+		
+		
+		return ret;
+	}
+	
 }
+
+
 
 
 /**
@@ -48,7 +75,7 @@ class IntHeap {
 		
 		int k=heap.size()-1;
 		
-		while (k > 1 && heap.get(k/2) > heap.get(k)) {
+		while (k >= 1 && heap.get(k/2) > heap.get(k)) {
 			swapListElement(heap, k/2, k);
 			k=k/2;
 		}

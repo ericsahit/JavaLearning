@@ -54,6 +54,8 @@ public class CollectionTest {
 		//ArrayList，基本的，长处是随机访问元素
 		//LinkedList，随机访问较慢，提供了优化的顺序访问和中间的插入和删除操作
 		//List的remove等方法依赖的都是object的equals方法，所以会根据equals方法的不同而表现不同
+		LinkedList<Integer> linkList = new LinkedList<Integer>();
+		linkList.add(8, 15);
 	}
 	//@Test
 	public void testIteration() {

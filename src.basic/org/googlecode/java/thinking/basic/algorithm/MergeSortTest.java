@@ -1,5 +1,7 @@
 package org.googlecode.java.thinking.basic.algorithm;
 
+import java.util.Arrays;
+
 import org.googlecode.java.thinking.basic.util.Print;
 import org.junit.Test;
 
@@ -8,7 +10,7 @@ public class MergeSortTest {
 	@Test
 	public void testMergeSort() {
 		
-		int[] arr = new int[] {4,6,2,54,8,1,3,7,9,10,5};
+		int[] arr = new int[] {4,6,2,54,8,1,3,7,2,9,10,5};
 		
 		int[] result = new int[arr.length];
 		
@@ -17,11 +19,16 @@ public class MergeSortTest {
 		for (int i: result) {
 			Print.printnb(i+" ");
 		}
+		
+		int[] arr3 = new int[] {4,6,2,54,1,8,1,3,7,9,10,5,2};
+		int[] result3 = new int[arr3.length];
+		mergeSort3(arr3, 0, arr3.length-1, result3);
+		Print.print(Arrays.toString(arr3));
 	}
 
 	/**
 	 * 堆排序，类似于自底向上的思想，所以称为外排序最常用的排序方式，
-	 * 先对磁盘的Block进行mergeSortSub2内排序，然后再逐个Block进行外排序
+	 * 先对磁盘的Block进行mergeSortSub2内排序，然后再逐个Block进行外排序。
 	 * 
 	 * 而快速排序，则是自顶向下的思想，先对整体排序，再对局部排序，不符合磁盘IO的访问模型
 	 * 
@@ -65,21 +72,47 @@ public class MergeSortTest {
 			result[k++]=arr[j++];
 		}
 		
-		for(int v=0; v<k; v++) {
-			arr[first+v]=result[first+v];
+		for(int v=first; v<=last; v++) {
+			arr[v]=result[v];
 		}
 			
+	}
+	
+	private void mergeSort3(int[] arr, int first, int last, int[] result) {
+		if (first<last) {
+			int mid=(first+last)/2;
+			mergeSort3(arr, first, mid, result);
+			mergeSort3(arr, mid+1, last, result);
+			mergeSortSub3(arr, first, mid, last, result);
+		}
 	}
 	
 	private void mergeSortSub3(int[] arr, int first, int mid, int last, int[] result) {
 		
 		int i=first;
 		int j=mid+1;
-		int k=mid+1;
+		int k=first;
 		
-		while(i<=mid && j<=last) {
-			
+		while (i<=mid && j<=last) {
+			if (arr[i] <= arr[j]) {
+				result[k]=arr[i++];
+			} else {
+				result[k]=arr[j++];
+			}
+			k++;
 		}
+		while (i<=mid) {
+			result[k++]=arr[i++];
+		}
+		while (j<=last) {
+			result[k++]=arr[j++];
+		}
+
+
+		for(int v=first; v<=last; v++) {
+			arr[v]=result[v];
+		}
+		
 		
 	}
 	
