@@ -26,6 +26,14 @@ public class Coding0601 {
 		Assert.assertTrue(findMatrixNumber(arr, 4, 4, 6));
 	}
 	
+	@Test
+	public void testStrReplaceSpace() {
+		char[] strArr = "We are happy!".toCharArray();
+		char[] ret = strReplaceSpace(strArr);
+		
+		Assert.assertArrayEquals("We%20are%20happy!".toCharArray(), ret);
+	}
+	
 	/**
 	 * 
 	 * @param arr
@@ -63,7 +71,7 @@ public class Coding0601 {
 	 * Example: We are happy => We%20are%20happy
 	 * @param arr
 	 */
-	public char[] StrReplaceSpace(char[] arr) {
+	public char[] strReplaceSpace(char[] arr) {
 		char[] ret = null;
 		
 		if (arr != null && arr.length > 0) {
@@ -75,20 +83,27 @@ public class Coding0601 {
 			}
 			
 			ret = new char[arr.length + spaceCount * 2];
-			
-			int idx1 = arr.length - 1;
-			int idx2 = 0;
-			
-			for (int i = arr.length - 1; i >= 0; i++) {
-				if (arr[i] != ' ') {
-					idx1--;
-				} else {//如果识别这么多的索引
-					int len = arr.length - idx1;
-					if (len > 0) 
-						System.arraycopy(arr, idx1+1, ret, ret.length - len, len);
-					
+
+			int idx = arr.length - 1;
+			for (int i = arr.length - 1; i >= 0; i--) {
+				
+				if (arr[i] == ' ') {
+					for (; idx > i; idx--) {
+						ret[idx + 2 * spaceCount] = arr[idx];
+					}
+					ret[idx + 2 * spaceCount - 2] = '%';
+					ret[idx + 2 * spaceCount - 1] = '2';
+					ret[idx + 2 * spaceCount] = '0';
+					idx--;
+					spaceCount--;
 				}
 				
+				if (spaceCount == 0) break;
+			
+				
+			}
+			for (; idx >= 0; idx--) {
+				ret[idx] = arr[idx];
 			}
 		}
 		
