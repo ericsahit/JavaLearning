@@ -49,7 +49,25 @@ public class Coding0604 {
 		void visit(TreeNode<T> node);
 	}
 	
-	private void inOrderTranverse<T>(TreeNode<T> root, Visit<T> visitFunc ) {
+	public <T> void preOrderTranverse(TreeNode<T> root, Visit<T> visitFunc) {
+		Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+		
+		TreeNode<T> node = root;
+		
+		while (node != null || !stack.isEmpty()) {
+			if (node != null) {
+				visitFunc.visit(node);
+				stack.push(node);
+				node = node.left;
+			} else {
+				node = stack.pop();
+				node = node.right;
+			}
+		}
+	}
+	
+	//中序遍历
+	private <T> void inOrderTranverse(TreeNode<T> root, Visit<T> visitFunc) {
 		Stack<TreeNode<Integer>> stack = new Stack<TreeNode<Integer>>();
 		
 		while (root != null || !stack.isEmpty()) {
