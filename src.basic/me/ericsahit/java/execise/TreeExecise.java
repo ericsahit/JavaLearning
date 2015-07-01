@@ -398,7 +398,7 @@ public class TreeExecise {
 		boolean isLeft = isBalancedTree(root.left, retLeft);
 		boolean isRight = isBalancedTree(root.right, retRight);
 		
-		int leftDepth = retLeft.val;
+		int leftDepth = retLeft.val;//使用val值，来表示深度
 		int rightDepth = retRight.val;
 		ret.val = ( leftDepth >= rightDepth ? leftDepth : rightDepth) + 1;
 		if (isLeft && isRight && Math.abs(leftDepth - rightDepth) <= 1) {
