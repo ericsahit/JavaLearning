@@ -44,10 +44,28 @@ public class LinkedListExercise {
 		LinkNode head3 = getNode(-1);
 		head3.next = getNode(4);
 		head3.next.next = getNode(6);
-		
+		System.out.println();
+		System.out.println("Reverse linked list: ");
 		printList(head);
-		printList(reverseLinkedList(head));
-		printList(reverseLinkedList(head3));
+		LinkNode rhead = reverseLinkedList(head);
+		Print.print("reverseLinkedList: ");
+		printList(rhead);
+		rhead = reverseLinkedList(head3);
+		printList(rhead);
+		//反转链表，第二种方法
+		rhead = reverseLinkedList2(rhead);
+		Print.print("reverseLinkedList2: ");
+		printList(rhead);
+		Print.print("reverseLinkedList3: ");
+		rhead = reverseLinkedList3(rhead);
+		printList(rhead);
+		//测试异常情况
+		printList(reverseLinkedList2(null));
+		printList(reverseLinkedList2(getNode(-1)));
+		LinkNode head4 = getNode(-1);
+		head4.next = getNode(5);
+		printList(reverseLinkedList2(head4));
+		
 		
 		//取链表的中间节点，如果n是偶数，则会返回(n+1)/2
 		head = createLinkedList(new int[] {1, 4, 5, 7, 2, 6, 8, 10});
@@ -83,6 +101,11 @@ public class LinkedListExercise {
 		
 		Print.print("Reverse list with stack: ");
 		printReverseListWithStack(head);
+		
+		Print.print("Merge linked list: ");
+		head = createLinkedList(new int[] {1, 4, 5, 7, 8, 10, 45});
+		head2 = createLinkedList(new int[] {2, 11, 18, 21, 38, 44, 69, 90});
+		printList(mergeSortedList(head, head2));
 	}
 	
 	/**
@@ -150,6 +173,62 @@ public class LinkedListExercise {
 			
 			node = nodeNext;
 		}
+		return rhead;
+	}
+	
+	/**
+	 * 反转链表，第二种方法 
+	 * 思路：在原来基础上进行反转，将每个指针都反转
+	 * 指针转换的优先级别
+	 */
+	public LinkNode reverseLinkedList2(LinkNode head) {
+		LinkNode rhead = getNode(-1);
+		if (head == null || head.next == null) {
+			return rhead;
+		}
+		
+		LinkNode node = head.next;
+		LinkNode second = node.next;
+		
+		node.next = null;
+		
+		while (second != null) {
+			LinkNode third = second.next;
+			
+			second.next = node;
+			
+			node = second;
+			second = third;
+		}
+		
+		rhead.next = node;
+		return rhead;
+	}
+	/**
+	 * 第二种方法的改良思路 
+	 * 使用一个pnode，就将左右情况都包含了
+	 */
+	public LinkNode reverseLinkedList3(LinkNode head) {
+		LinkNode phead = null;
+		LinkNode pnode = head.next;
+		LinkNode pprev = null;
+		
+		while (pnode != null) {
+			LinkNode pnext = pnode.next;
+			if (pnext == null) {
+				phead = pnode;
+			}
+			
+			pnode.next = pprev;
+			
+			pprev = pnode;
+			pnode = pnext;
+			
+		}
+		
+		LinkNode rhead = getNode(-1);
+		rhead.next = phead;
+		
 		return rhead;
 	}
 	
@@ -232,6 +311,53 @@ public class LinkedListExercise {
 		}
 	}
 	
+	/**
+	 * 想想，合并列表都需要保存哪些变量？
+	 * 如果在原链表的基础上进行合并，则比较复杂
+	 * 对比归并排序
+	 * 
+	 * 
+	 *  
+	 */
+	public LinkNode mergeSortedList(LinkNode head1, LinkNode head2) {
+		LinkNode mergeHead = getNode(-1);
+		
+		LinkNode node1 = head1.next;
+		LinkNode node2 = head2.next;
+		LinkNode mergeNode = mergeHead;
+		
+		while (node1 != null && node2 != null) {
+			if (node1.val <= node2.val) {
+				mergeNode.next = node1;
+				node1 = node1.next;
+			} else {
+				mergeNode.next = node2;
+				node2 = node2.next;
+			}
+			
+			mergeNode = mergeNode.next;
+		}
+		
+		while (node1 != null) {
+			mergeNode.next = node1;
+			
+			node1 = node1.next;
+			mergeNode = mergeNode.next;
+			
+		}
+		while (node2 != null) {
+			mergeNode.next = node2;
+			
+			node2 = node2.next;
+			mergeNode = mergeNode.next;
+			
+		}
+		mergeNode.next = null;
+		
+		return mergeHead;
+		
+	}
+	
 	
 	public LinkNode createLinkedList(int[] arr) {
 		LinkNode head = new LinkNode(-1);
@@ -260,6 +386,7 @@ public class LinkedListExercise {
 			Print.printnb(node+", ");
 			node = node.next;
 		}
+		Print.print();
 	}
 	
 }
