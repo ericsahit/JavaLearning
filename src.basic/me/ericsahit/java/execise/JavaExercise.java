@@ -39,4 +39,13 @@ public class JavaExercise {
 		Assert.assertTrue(str2.equals("bbc"));
 		
 	}
+	
+	@Test
+	public void test2() throws Exception {
+		String str = " dadada wdada adad ";
+		//"dadada wdada adad " 3
+		//" dadada wdada adad " 4
+		Print.print(str.split(" ").length);
+	}
+	
 }
