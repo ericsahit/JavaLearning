@@ -312,6 +312,7 @@ public class LinkedListExercise {
 	}
 	
 	/**
+	 * offer:
 	 * 想想，合并列表都需要保存哪些变量？
 	 * 如果在原链表的基础上进行合并，则比较复杂
 	 * 对比归并排序

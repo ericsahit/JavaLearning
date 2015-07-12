@@ -2,6 +2,8 @@ package me.ericsahit.java.execise;
 
 import java.util.HashMap;
 
+import junit.framework.Assert;
+
 import org.googlecode.java.thinking.basic.util.Print;
 import org.junit.Test;
 
@@ -22,6 +24,16 @@ public class TwoSumTest {
 		Print.print(reverseWords2(null));
 		Print.print(reverseWords2(" fsfesf idja"));
 		Print.print(reverseWords2(" fsfesf     idja "));
+		
+		//查找旋转数组中的最小数字
+		Assert.assertEquals(1, findMin(new int[] { 1, 2, 3, 4, 5}));
+		Assert.assertEquals(1, findMin(new int[] { 4, 5, 7, 1, 2, 3}));
+		Assert.assertEquals(1, findMin(new int[] { 7, 1, 2, 3, 4, 5}));
+		Assert.assertEquals(1, findMin(new int[] { 6, 7, 1, 2, 3, 4, 5}));
+		Assert.assertEquals(1, findMin(new int[] { 2, 3, 4, 5, 7, 1}));
+		Assert.assertEquals(1, findMin(new int[] { 2, 1}));
+		
+		StringBuilder sb = new StringBuilder();
 	}
 	
 	/**
@@ -174,8 +186,80 @@ public class TwoSumTest {
      */
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
     	
+    	int exceed = 0;
+    	ListNode phead = new ListNode(-1);
+    	ListNode pnode = phead;
+    	
+    	while (l1 != null && l2 != null) {
+    		int sum = l1.val + l2.val + exceed;
+    		if (sum >= 10) {
+    			sum -= 10;
+    			exceed = 1;
+    		} else exceed = 0;
+    			
+    		pnode.next = new ListNode(sum);
+    		pnode = pnode.next;
+    	}
+    	
+    	while (l1 != null) {
+    		int sum = l1.val + exceed;
+    		if (sum >= 10) {
+    			sum -= 10;
+    			exceed = 1;
+    		} else exceed = 0;
+    		
+    		pnode.next = new ListNode(sum);
+    		l1 = l1.next;
+    	}
+    	
+    	while (l2 != null) {
+    		int sum = l2.val + exceed;
+    		if (sum >= 10) {
+    			sum -= 10;
+    			exceed = 1;
+    		} else exceed = 0;
+    		
+    		pnode.next = new ListNode(sum);
+    		l1 = l1.next;
+    	}
+    	
+    	
+    	return phead.next;
     }
-	
+    
+    /**
+     * (4 5 7 1 2 3)
+     * (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+     * https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/ 
+     * 自己洗的
+     */
+    public int findMin(int[] nums) {
+    	if (nums == null || nums.length == 0) {
+    		return -1;
+    	}
+    	
+    	int start = 0;
+    	int end = nums.length - 1;
+    	if (nums[start] <= nums[end]) {
+    		return nums[0];
+    	}
+    	
+    	while (start < end) {
+    		int midIdx = (start + end)/2;
+    		int midVal = nums[midIdx];
+    		if (midVal >= nums[0]) { //位于第一个递增序列
+    			start = midIdx + 1;
+    		} else {
+    			if (midVal < nums[midIdx - 1]) {
+    				return midVal;
+    			} else {
+    				end = midIdx - 1;
+    			}
+    		}
+    	}
+    	return nums[start];
+    }
+    
     class TreeNode {
         int val;
         TreeNode left;

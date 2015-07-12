@@ -87,20 +87,31 @@ public class TreeExecise {
 	}
 	
 	@Test
-	public void atestTranverse() {
+	public void testTranverse() {
 		
 		TreeNode<Integer> r1 = createTree();
 		
 		PrintNode<Integer> printNode = new PrintNode<Integer>();
 		
 		TreeNode<Integer> root = r1;
+		Print.print("\r\npreOrderTranverseRecursive: ");
 		preOrderTranverseRecursive(root, printNode);
-		Print.print();
+		Print.print("\r\npreOrderTranverse: ");
 		preOrderTranverse(root, printNode);
-		Print.print();
+		Print.print("\r\npreOrderTranverse2: ");
+		preOrderTranverse2(root, printNode);
+		Print.print("\r\ninOrderTranverseRecursive: ");
 		inOrderTranverseRecursive(root, printNode);
-		Print.print();
+		Print.print("\r\ninOrderTranverse: ");
 		inOrderTranverse(root, printNode);
+		Print.print("\r\ninOrderTranverse2: ");
+		inOrderTranverse2(root, printNode);
+		
+		Print.print("\r\npostOrderTranverseRecursive: ");
+		postOrderTranverseRecursive(root, printNode);
+		
+		Print.print("\r\npostOrderTranverse: ");
+		postOrderTranverse(root, printNode);
 		
 		Print.print("\nLevel traverse: ");
 		levelTraverse(root, printNode);
@@ -575,6 +586,7 @@ public class TreeExecise {
 	}
 	
 	//前序非递归
+	//这种思路前序和中序都可以兼容，不需要做太多修改
 	public <T> void preOrderTranverse(TreeNode<T> root, Visit<T> visitFunc) {
 		
 		if (root == null) return;
@@ -593,13 +605,33 @@ public class TreeExecise {
 			}
 		}
 	}
+	//前序非递归2
+	//理解这种思路，访问自身，然后右孩子和左孩子分别进栈
+	public <T> void preOrderTranverse2(TreeNode<T> root, Visit<T> visitFunc) {
+		if (root == null) 
+			return;
+		Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+		
+		TreeNode<T> node = root;
+		stack.push(node);
+		while (!stack.isEmpty()) {
+			node = stack.pop();
+			visitFunc.visit(node);
+			if (node.right != null) {
+				stack.push(node.right);
+			}
+			if (node.left != null) {
+				stack.push(node.left);
+			}
+		}
+	}
 	
 	//中序递归遍历
 	public <T> void inOrderTranverseRecursive(TreeNode<T> root, Visit<T> visitFunc) {
 		if (root != null) {
-			preOrderTranverseRecursive(root.left, visitFunc);
+			inOrderTranverseRecursive(root.left, visitFunc);
 			visitFunc.visit(root);
-			preOrderTranverseRecursive(root.right, visitFunc);
+			inOrderTranverseRecursive(root.right, visitFunc);
 		}
 	}
 
@@ -620,6 +652,53 @@ public class TreeExecise {
 		}
 	}
 	
+	//中序非递归遍历2
+	private <T> void inOrderTranverse2(TreeNode<T> root, Visit<T> visitFunc) {
+		Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+		
+		while (root != null || !stack.isEmpty()) {
+			while (root != null) {
+				stack.push(root);
+				root = root.left;
+			}
+			root = stack.pop();
+			visitFunc.visit(root);
+			root = root.right;
+		}
+	}
+	
+	//后序递归遍历
+	public <T> void postOrderTranverseRecursive(TreeNode<T> root, Visit<T> visitFunc) {
+		if (root != null) {
+			postOrderTranverseRecursive(root.left, visitFunc);
+			postOrderTranverseRecursive(root.right, visitFunc);
+			visitFunc.visit(root);
+		}
+	}
+	
+	//后序非递归遍历
+	private <T> void postOrderTranverse(TreeNode<T> root, Visit<T> visitFunc) {
+		Stack<TreeNode<T>> stack1 = new Stack<TreeNode<T>>();
+		Stack<TreeNode<T>> stack2 = new Stack<TreeNode<T>>();
+		TreeNode<T> node = root;
+		
+		stack1.push(root);
+		while (!stack1.isEmpty()) {
+			node = stack1.pop();
+			stack2.push(node);
+			if (node.left != null) {
+				stack1.push(node.left);
+			}
+			if (node.right != null) {
+				stack1.push(node.right);
+			}
+		}
+		while (!stack2.isEmpty()) {
+			visitFunc.visit(stack2.pop());
+		}
+	}
+	
+	
 	public void levelTraverse(TreeNode root, Visit func) {
 		if (root == null)
 			return;		
@@ -635,6 +714,80 @@ public class TreeExecise {
 		}
 		
 	}
+	
+	/**
+	 * leetcode: 102  
+	 * https://leetcode.com/problems/binary-tree-level-order-traversal/
+	 * 思路：使用两个栈，来依次存储每个层次的节点，然后加到
+	 * 
+输入：
+    3
+   / \
+  9  20
+    /  \
+   15   7
+输出：
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+	 */
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        
+        if (root == null)
+            return ret;
+            
+        Queue<TreeNode> queue1 = new LinkedList<TreeNode>();
+        Queue<TreeNode> queue2 = new LinkedList<TreeNode>();
+        TreeNode node = null;
+        queue1.add(root);
+        while (!queue1.isEmpty() || !queue2.isEmpty()) {
+            
+            if (!queue1.isEmpty()) {
+            	
+            	List<Integer> currLevelValList = new ArrayList<Integer>();
+            	
+            	while (!queue1.isEmpty()) {
+                    node = queue1.poll();
+                    //currLevelValList.add(node.val);
+                    currLevelValList.add((Integer)node.val);
+                    if (node.left != null) {
+                    	queue2.add(node.left);
+                    }
+                    
+                    if (node.right != null) {
+                    	queue2.add(node.right);
+                    }
+            	}
+            	ret.add(currLevelValList);
+            } else {
+            	
+            	List<Integer> currLevelValList = new ArrayList<Integer>();
+            	
+            	while (!queue2.isEmpty()) {
+                    node = queue2.poll();
+                    //currLevelValList.add(node.val);
+                    currLevelValList.add((Integer)node.val);
+                    if (node.left != null) {
+                    	queue1.add(node.left);
+                    }
+                    
+                    if (node.right != null) {
+                    	queue1.add(node.right);
+                    }
+            	}
+            	ret.add(currLevelValList);
+            	
+            }
+            
+        }
+        
+        return ret;
+        
+    } 
 
 }
 
