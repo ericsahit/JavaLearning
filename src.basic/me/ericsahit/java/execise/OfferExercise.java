@@ -85,6 +85,11 @@ public class OfferExercise {
     	
     }
     
+    /**
+     * 也是一道二分法的变种
+     */
+    //public int findNearestElem(int[] arr, )
+    
     
     
     
