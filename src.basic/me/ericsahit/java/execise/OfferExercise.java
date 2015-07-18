@@ -13,6 +13,10 @@ public class OfferExercise {
 		Assert.assertEquals(kNumberInSortedArray(new int[]{1,3,4,4,4,8,10}, 3), 1);
 		Assert.assertEquals(kNumberInSortedArray(new int[]{1,2,4,4,4,8,10}, 3), 0);
 		Assert.assertEquals(kNumberInSortedArray(new int[]{3,3,3,5,6,8,10,29}, 3), 3);
+		
+		int[] ret = findTwoAppearOnceNumber(new int[] {2, 4, 3, 6, 3, 2, 5, 5});
+		Assert.assertEquals(ret[0], 6);
+		Assert.assertEquals(ret[1], 4);
 	}
 	
     public int maxProfit(int[] prices) {
@@ -84,6 +88,59 @@ public class OfferExercise {
     	return 0;
     	
     }
+    
+    /**
+     * 40.数组里出出现一次的数，数组里只有两个数字出现了一次，其他都是两次，求这两个数
+     * 抑或的XOR的应用，自己XOR自己，结果是0
+     * 
+     * 与http://www.cnblogs.com/wuyuegb2312/p/3139926.html
+     * 与给定一个随机排列的32位整数的顺序文件，找出一个不在文件中的32位整数。
+     * 这个问题类似。
+     * 按照位扫描，分别统计0和1的位数，把较小的那一部门用作下一次递归，
+     * 从第32位一直扫描完第0位，必然得到一个不含元素的空集
+     * 这个集合对应就是缺失的元素
+     */
+    public int[] findTwoAppearOnceNumber(int[] arr) {
+    	int[] retArr = new int[2];
+    	if (arr == null || arr.length <= 1) {
+    		return retArr;
+    	}
+    	int xorResult = 0;
+    	for (int i = 0; i < arr.length; i++) {
+    		xorResult ^= arr[i];
+		}
+    	
+    	int firstBit1Idx = findFirstBit1(xorResult);
+    	
+    	int xor0 = 0, xor1 = 0;
+    	for (int i = 0; i < arr.length; i++) {
+    		if (checkBit1(arr[i], firstBit1Idx)) {
+    			xor0 ^= arr[i];
+    		} else {
+    			xor1 ^= arr[i];
+    		}
+		}
+    	retArr[0] = xor0;
+    	retArr[1] = xor1;
+    	return retArr;
+    }
+    
+    private int findFirstBit1(int num) {
+    	int idx = 0;
+    	while ((num & 1) == 0 && idx < 32) {
+    		num >>>= 1;
+    		idx ++;
+    	}
+    	return idx;
+    }
+    
+    private boolean checkBit1(int num, int idx) {
+    	num >>>= idx;
+        return (num & 1) == 1;
+    }
+    
+    
+    
     
     /**
      * 也是一道二分法的变种
