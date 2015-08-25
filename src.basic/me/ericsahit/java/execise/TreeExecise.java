@@ -190,10 +190,30 @@ public class TreeExecise {
 		Assert.assertEquals(getNode(2), getNearestParent2(root, getNode(5), getNode(7)));
 		Assert.assertEquals(getNode(1), getNearestParent2(root, getNode(8), getNode(7)));
 		Assert.assertEquals(null, getNearestParent2(root, getNode(5), getNode(18)));
-		//这种特殊情况应该怎么处理，2是5的祖先，那么共同祖先应该是1
+		//这种特殊情况应该怎么处理，2是5的祖先，那么共同祖先应该是1 
 		//使用迭代处理，共同祖先为2本身
 		Assert.assertEquals(getNode(2), getNearestParent2(root, getNode(7), getNode(2)));
 		
+		//序列化二叉树
+		Print.print("ser tree: ");
+		List<Object> list = new ArrayList<Object>();
+		serializeBinaryTree(createTree(), list);
+		for (Object obj : list) {
+			Print.printnb(obj+", ");
+		}
+		TreeNode derresult = deserializeBinaryTree(list);
+		Print.print("der result2: ");
+		//levelTraverse(root, printNode);
+		list.clear();
+		serializeBinaryTree(derresult, list);
+		for (Object obj : list) {
+			Print.printnb(obj+", ");
+		}
+		
+		
+		//offer 层次遍历二叉树，不用两个队列来实现
+		//levelOrder(createTree2());
+		levelOrder2(createTree2());
 		//重建二叉树
 	}
 	
@@ -787,8 +807,104 @@ public class TreeExecise {
         
         return ret;
         
-    } 
-
+    }
+    
+    /**
+     * offer60 同上，层次打印二叉树，相同的层次打印到一行
+     * 不使用两个Queue，使用记录来记录每个层次的个数
+     */
+    public void levelOrder2(TreeNode root) {
+    	
+    	if (root == null) {
+    		return;
+    	}
+    	
+    	Queue<TreeNode> queue = new LinkedList<TreeNode>();
+    	
+    	int curLevelNodeToBePrinted = 1;
+    	int nextLevel = 0;
+    	
+    	queue.add(root);
+    	while (!queue.isEmpty()) {
+    		TreeNode node = queue.poll();
+    		
+    		Print.printnb(node.val + " ");
+    		if (node.left != null) {
+    			queue.add(node.left);
+    			nextLevel++;
+    		}
+    		if (node.right != null) {
+    			queue.add(node.right);
+    			nextLevel++;
+    		}
+    		curLevelNodeToBePrinted--;
+    		if (curLevelNodeToBePrinted == 0) {
+    			Print.print();
+    			curLevelNodeToBePrinted = nextLevel;
+    			nextLevel = 0;
+    		}
+    	}
+    }
+    
+    /**
+     * offer 61
+     * 之字打印二叉树
+     * 思路，与层次打印二叉树的思路类似，使用两个栈来临时存储节点
+     */
+    public void printTreeByZhi(TreeNode root) {
+    	
+    	if (root == null) return;
+    	Stack<TreeNode> stack1 = new Stack<TreeNode>();
+    	Stack<TreeNode> stack2 = new Stack<TreeNode>();
+    	
+    	Stack[] stacks = new Stack[2];
+    	stacks[0] = stack1;
+    	stacks[1] = stack2;
+    	
+    	int curStackIdx = 0;
+    	int nextStackIdx = 0;
+    	
+    	stacks[curStackIdx].push(root);
+    	while (!stacks[curStackIdx].isEmpty() || !stacks[curStackIdx].isEmpty()) {
+    		
+    	}
+    }
+    
+    
+    /**
+     * offer62 序列化二叉树
+     * 层次遍历还是前序遍历？
+     * 如果是前序遍历
+     */
+    public void serializeBinaryTree(TreeNode root, List<Object> list) {
+    	if (root == null) {
+    		list.add("#");
+    		return;
+    	}
+    	list.add(root.val);
+    	serializeBinaryTree(root.left, list);
+    	serializeBinaryTree(root.right, list);
+    }
+    
+    public TreeNode deserializeBinaryTree(List<Object> list) {
+    	if (list == null || list.isEmpty()) {
+    		return null;
+    	}
+    	
+    	String val = list.remove(0).toString();
+    	if (val == "#") {
+    		return null;
+    	}
+    	
+    	TreeNode root = new TreeNode();
+    	root.val = val;
+    	root.left = deserializeBinaryTree(list);
+    	root.right = deserializeBinaryTree(list);
+    	
+    	return root;
+    	
+    }
+    
 }
 
 class TreeNode<T> {

@@ -106,6 +106,13 @@ public class LinkedListExercise {
 		head = createLinkedList(new int[] {1, 4, 5, 7, 8, 10, 45});
 		head2 = createLinkedList(new int[] {2, 11, 18, 21, 38, 44, 69, 90});
 		printList(mergeSortedList(head, head2));
+		
+		//删除排序链表中的重复节点
+		head = createLinkedList(new int[] {1, 4, 4, 5, 7, 8, 8, 10, 10, 45, 45, 45, 45});
+		deleteRepeatedNode2(head.next);
+		//deleteRepeatedNode(head);
+		Print.print("deleteRepeatedNode2: ");
+		printList(head);
 	}
 	
 	/**
@@ -357,6 +364,56 @@ public class LinkedListExercise {
 		
 		return mergeHead;
 		
+	}
+	
+	/**
+	 * offer56：删除链表的重复节点
+	 * 这个只是把重复的一个删了，第一个还留着，如果是删除重复的全部节点呢
+	 */
+	public LinkNode deleteRepeatedNode(LinkNode node) {
+		if (node == null || node.next == null) {
+			return node;
+		}
+		LinkNode pre = node;
+		LinkNode next = node.next;
+		while (next != null) {
+			if (pre.val != next.val) {
+				pre = next;
+				next = next.next;
+			} else {
+				pre.next = next.next;
+				next = next.next;
+			}
+		}
+		return node;
+	}
+	
+	public LinkNode deleteRepeatedNode2(LinkNode node) {
+		if (node == null || node.next == null) {
+			return node;
+		}
+		
+		LinkNode head = getNode(-1);
+		head.next = node;
+		
+		LinkNode pre = head;
+		LinkNode cur = pre.next;
+		
+		while (cur != null && cur.next != null) {
+			if (cur.val == cur.next.val) {
+				
+				while (cur.next != null && cur.val == cur.next.val) {
+					cur = cur.next;
+				}
+				pre.next = cur.next;
+			} else {//如果没有重复的节点，那么应该怎么处理？
+				//pre.next = cur;
+				pre = pre.next;
+			}
+			cur = cur.next;
+		}
+		
+		return head.next;
 	}
 	
 	

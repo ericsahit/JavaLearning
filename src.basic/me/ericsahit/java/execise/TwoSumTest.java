@@ -231,7 +231,7 @@ public class TwoSumTest {
      * (4 5 7 1 2 3)
      * (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
      * https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/ 
-     * 自己洗的
+     * 自己写的
      */
     public int findMin(int[] nums) {
     	if (nums == null || nums.length == 0) {
