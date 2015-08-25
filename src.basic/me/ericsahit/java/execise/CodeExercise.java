@@ -39,11 +39,46 @@ public class CodeExercise {
 　　  * You should return [1,2,3,6,9,8,7,4,5].
      * 给定一个m*n的矩阵，输入所有元素的螺旋顺序
      * 
-     * 思路，按照螺旋顺序来输出
+     * 思路，按照螺旋顺序来输出，这个题目跟offer的一道题目是一样的
+     * 主要问题：每次输出后需要判断，否则会多输出一次
      */
     public List<Integer> spiralOrder(int[][] matrix) {
     	
-    	return null;
+    	List<Integer> result = new ArrayList<Integer>();
+    	if (matrix == null || matrix.length == 0 || matrix[0] == null || matrix[0].length == 0) {
+    		return result;
+    	}
+    	
+    	int rows = matrix.length;
+    	int cols = matrix[0].length;
+    	int startRow = 0, startCol = 0, endRow = rows - 1, endCol = cols - 1;
+    	
+    	while (startRow <= endRow && startCol <= endCol) {
+    		for (int i = startCol; i <= endCol; i++) {
+    			result.add(matrix[startRow][i]);
+			}
+    		startRow++;
+    		if (startRow > endRow) break;//增加了每一次的判断，否则会出错，当输入是[[1,2,3]]时候，会多输出一次
+    		
+    		for (int i = startRow; i <= endRow; i++) {
+    			result.add(matrix[i][endCol]);
+			}
+    		endCol--;
+    		if (startCol > endCol) break;
+    		
+    		for (int i = endCol; i >= startCol; i--) {
+    			result.add(matrix[endRow][i]);
+			}
+    		endRow--;
+    		if (startRow > endRow) break;
+    		
+    		for (int i = endRow; i >= startRow; i--) {
+    			result.add(matrix[i][startCol]);
+			}
+    		startCol++;
+    	}
+    	
+    	return result;
     }
 	
 	
