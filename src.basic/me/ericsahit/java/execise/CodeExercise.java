@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
+
+import junit.framework.Assert;
 
 import org.googlecode.java.thinking.basic.util.Print;
 import org.junit.Test;
@@ -22,6 +25,18 @@ public class CodeExercise {
 		List<Interval> result = merge(list);
 		for (Interval inv: result) {
 			Print.print(inv);
+		}
+		
+		//code020
+		Assert.assertTrue(isValid("()[]{}"));
+		Assert.assertTrue(!isValid("]"));
+		Assert.assertTrue(!isValid("(]"));
+		Assert.assertTrue(!isValid("([)]"));
+		
+		//code021
+		List<String> list2 = generateParenthesis(3);
+		for (String s: list2) {
+			Print.print(s);
 		}
 	}
 	
@@ -128,7 +143,147 @@ public class CodeExercise {
 		
 		return result;
 	}
+	
+    /**
+     * code020 括号匹配
+     * https://leetcode.com/problems/valid-parentheses/
+     * 
+　　Given a string containing just the characters ‘(‘, ‘)’, ‘{‘, ‘}’, ‘[’ and ‘]’, determine if the input string is valid. 
+　　The brackets must close in the correct order, “()” and “()[]{}” are all valid but “(]” and “([)]” are not. 
+     * 括号匹配
+     * 
+     * 思路，使用栈，遍历输出
+     */
+	public boolean isValid(String s) {
+		if (s == null || s.trim().isEmpty()) {
+			return true;
+		}
+		Stack<Character> stack = new Stack<Character>();
+		char[] arr = s.toCharArray();
+		for (char c: arr) {
+			if (c == '(' || c == '{' || c== '[') {
+				stack.push(c);
+			} else if (c == ')' || c == '}' || c == ']') {
+				
+				if (stack.isEmpty()) {
+					return false;
+				}
+				
+				if (c == ')') {
+					if (stack.peek() == '(') {
+						stack.pop();
+					} else {
+						return false;
+					}
+				} else if (c == '}') {
+					if (stack.peek() == '{') {
+						stack.pop();
+					} else {
+						return false;
+					}
+				} else if (c == ']') {
+					if (stack.peek() == '[') {
+						stack.pop();
+					} else {
+						return false;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		if (stack.isEmpty())
+			return true;
+		
+		return false;
+	}
+	
+    /**
+     * code021 合并排序链表
+     * https://leetcode.com/problems/merge-two-sorted-lists/
+     * 
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists. 
+     * 
+     * 思路，链表题目的难点，主要在于指针的操作。希望可以举一反三
+     * 这道题目相似的有一些，可以都从思路上解决
+     */
+	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		if (l1 == null)
+			return l2;
+		if (l2 == null)
+			return l1;
+		ListNode head = new ListNode(0);
+		ListNode pnode = head;
+		ListNode p1 = l1;
+		ListNode p2 = l2;
+		while (p1 != null && p2 != null) {
+			if (p1.val > p2.val) {
+				pnode.next = p2;
+				p2 = p2.next;
+			} else {
+				pnode.next = p1;
+				p1 = p1.next;
+			}
+			pnode = pnode.next;
+		}
+		
+		if (p1 != null) {
+			pnode.next = p1;
+		} else if (p2 != null) {
+			pnode.next = p2;
+		}
+		
+		return head.next;
+	}
+	
+	/**
+	 * code022
+	 * https://leetcode.com/problems/generate-parentheses/
+	 * 　Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses. 
+　　For example, given n = 3, a solution set is:
+
+"((()))", "(()())", "(())()", "()(())", "()()()"
+	 * 产生所有合理的
+	 * 思路：递归思路
+	 * ****难点：怎么保证括号一个一个被写入，多思考
+	 */
+    public List<String> generateParenthesis(int n) {
+    	List<String> result = new ArrayList<String>();
+    	if (n <= 0) {
+    		return result;
+    	}
+    	char[] arr = new char[n * 2];
+    	generateParenthesisSub(n, n, 0, arr, result);
+    	return result;
+    }
+    
+    public void generateParenthesisSub(int left, int right, int idx, char[] arr, List<String> list) {
+    	if (right < left) {
+    		return;
+    	} else if (left == 0 && right == 0) {
+    		list.add(new String(arr));
+    	} else {
+    		if (left > 0) {
+    			arr[idx]='(';
+    			generateParenthesisSub(left-1, right, idx+1, arr, list);
+    			//left--;
+    		}
+    		if (right > 0) {
+    			arr[idx]=')';
+    			generateParenthesisSub(left, right-1, idx+1, arr, list);
+    			//right--;
+    		}
+    	}
+    }
+	
 }
+
+ class ListNode {
+     int val;
+     ListNode next;
+     ListNode(int x) { val = x; }
+ }
 
  class Interval {
      int start;
